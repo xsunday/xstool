@@ -1,0 +1,69 @@
+<template>
+  <section>
+    <!--搜索栏-->
+    <el-col :span="12" class="toolbar" style="padding-bottom: 0px;">
+      <el-form :inline="true" :model="tbSearch" size="small">
+        <el-form-item>
+          <el-input type="text" v-model.lazy="tbSearch.key" placeholder="关键字" suffix-icon="search"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="tbGetList">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="tbAdd">新增</el-button>
+          <i class="el-icon-question"></i>
+        </el-form-item>
+      </el-form>
+    </el-col>
+
+    <!--列表-->
+    <el-table size="small" :data="tbList" v-loading="tbLoading" @selection-change="tbSelectChange" sortable="custom" @sort-change="tbSortChange">
+
+      <el-table-column type="selection" width="55"></el-table-column>
+
+      <% tbFields.forEach(function(field){   if (field.flist){ %>
+        <el-table-column prop="<%=field.fname%>" label="<%=field.ftitle%>"></el-table-column>
+      <% }} ); %>
+      <el-table-column label="操作" width="180">
+        <template slot-scope="scope">
+          <el-button-group size="small">
+            <el-button @click="tbAdd(scope.row)" size="mini" type="primary" icon="el-icon-edit"></el-button>
+            <el-button @click="tbDel(scope.row)" size="mini" type="danger" icon="el-icon-delete"></el-button>
+          </el-button-group>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- page -->
+    <el-col :span="24" class="toolbar">
+      <!-- <el-button type="danger" @click="batchRepass" :disabled="this.sels.length===0">批量重置密码</el-button> -->
+      <el-pagination @current-change="tbPageChange" :page-size="20" :total="tbTotalCount">
+      </el-pagination>
+    </el-col>
+
+    <!-- <el-col :span="12" style="text-align: right">
+      <el-button size="small" type="primary" @click="tbBatchDel" :disabled="tbSelects.length==0">批量删除</el-button>
+    </el-col> -->
+
+    <<%=tableName%>-box :show.sync="boxShow" title="用户" :row="boxParam" @submit="boxSubmit"></<%=tableName%>-box>
+  </section>
+</template>
+
+<script>
+  // <%=tbFieldsJsonStr%>
+  import { tableMixin } from '@/utils/mixins'
+
+  import <%=tableName %>Box from './<%=tableName%>Box';
+
+  export default {
+    mixins: [tableMixin],
+
+    components: { <%=tableName%>Box },
+
+  data() {
+    return {
+      tbUrl: "/a/b/<%=tableName%>", tbUrlDel: "/a/b/<%=tableName%>Del",
+    }
+  },
+  }
+</script>

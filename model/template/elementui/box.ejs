@@ -1,0 +1,63 @@
+
+<!-- box -->
+<template>
+  <el-dialog :title="boxTitlePre + title" :visible.sync="visible" @open="openHandler" :fullscreen="false" @close="closeHandler">
+    <el-form size="small" v-loading="boxLoading" status-icon :model="boxForm" label-width="80px" :rules="boxFormRules" ref="boxForm">
+
+      <% tbFields.forEach(function(field){ %>
+      <el-form-item label="<%=field.ftitle%>" prop="<%=field.fname%>"><% if (field.ftype==='text' || field.ftype==='textarea' || field.ftype==='number'){ %>
+        <el-input type="<%=field.ftype%>" v-model="boxForm.<%=field.fname%>"></el-input>
+        <% }else if(field.ftype==='switch'){ %>
+        <el-switch v-model="boxForm.<%=field.fname%>" active-value="1" inactive-value="0"></el-switch>
+        <% }else if(field.ftype==='radio'){ %>
+        <el-radio-group v-model="boxForm.<%=field.fname%>">
+          <el-radio label='o' key="key" v-for="(o,key) in field.foption">{{o}}</el-radio>
+        </el-radio-group>
+        <% }else if(field.ftype==='select'){ %>
+        <el-select v-model="boxForm.<%=field.fname%>" >
+          <el-option v-for="" :key=""></el-option>
+        </el-select>
+        <% }else if(field.ftype==='check'){ %>
+        <el-checkbox-group v-model="boxForm.<%=field.fname%>">
+          <el-checkbox label="" key=""></el-checkbox>
+        </el-checkbox-group>
+        <% }else if(field.ftype==='date'){ %>
+        <el-date-picker type="date" v-model="boxForm.<%=field.fname%>" ></el-date-picker>
+        <% }else if(field.ftype==='image'){ %>
+
+        <% }else if(field.ftype==='html'){ %>
+        <span v-html="boxForm.<%=field.fname%>"></span>
+        <% } %></el-form-item>
+      <% }) %>
+
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button size="small" @click="closeHandler">取 消</el-button>
+      <el-button size="small" type="primary" :loading="boxLoading" @click="submitHandler">确 定</el-button>
+    </span>
+  </el-dialog>
+</template>
+<script>
+  //<%=tbFieldsJsonStr%>
+  import { boxMixin } from '@/utils/mixins'
+  export default {
+    mixins: [boxMixin],
+    components: { ElxDate },
+    data() {
+      return {
+        boxUrl: "/a/b/<%=tableName%>Save", boxUrlSave: "/a/b/<%=tableName%>Save",
+        boxForm: {
+          <% tbFields.forEach(function (field) { %>  <%=field.fname%> : "", <%})%> 
+        },
+        boxFormRules: {
+          //title: [{ required: true, message: '标题不为空' }],
+        }
+      }
+    },
+    mounted() {
+    },
+    methods: {
+
+    }
+  }
+</script>
